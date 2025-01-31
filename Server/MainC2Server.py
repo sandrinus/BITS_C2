@@ -99,7 +99,7 @@ class  MainC2Server:
 
 if __name__ == "__main__":
     # Initialize Main C2 Server
-    server = MainC2Server('0.0.0.0', 9999)
+    server = MainC2Server('127.0.0.1', 9999)
     
     # Start server in a separate thread
     threading.Thread(target=server.start_server).start()
