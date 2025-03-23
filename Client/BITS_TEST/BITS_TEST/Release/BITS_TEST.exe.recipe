@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>D:\BITS test\BITS_TEST\Release\BITS_TEST.exe</FullPath>
+      <FullPath>D:\c2\Client\BITS_TEST\Release\BITS_TEST.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />
