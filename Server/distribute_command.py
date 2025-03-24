@@ -4,7 +4,32 @@ import os
 BASE_DIR = "D:\\c2\\Server\\clients"
 
 def deploy_teams():
-    pass
+    """Create a specified number of team directories and add specified files."""
+    try:
+        num_teams = int(input("Enter the number of teams to create: ").strip())
+        file_names = input("Enter file names (comma-separated): ").strip().split(",")
+
+        if not os.path.exists(BASE_DIR):
+            os.makedirs(BASE_DIR)
+
+        for i in range(1, num_teams + 1):
+            team_name = f"team{i:02d}"  # Format as team01, team02, etc.
+            team_path = os.path.join(BASE_DIR, team_name)
+
+            os.makedirs(team_path, exist_ok=True)  # Create team directory if it doesn't exist
+
+            for file_name in file_names:
+                file_name = file_name.strip()  # Remove extra spaces
+                if file_name:
+                    file_path = os.path.join(team_path, file_name)
+                    if not os.path.exists(file_path):
+                        with open(file_path, "w") as f:
+                            pass  # Create an empty file
+
+        print(f"Created {num_teams} teams with {len(file_names)} files in each folder.")
+
+    except ValueError:
+        print("Invalid input. Please enter a valid number of teams.")
 
 def list_teams():
     """List all available teams in the clients folder."""
@@ -129,24 +154,27 @@ def modify_all_files():
 def main():
     while True:
         print("\nMenu:")
-        print("1. List all teams")
-        print("2. Modify specific files in a team")
-        print("3. Modify a file in multiple teams")
-        print("4. Modify all files in all teams")
-        print("5. Exit")
+        print("1. Deploy teams")
+        print("2. List all teams")
+        print("3. Modify specific files in a team")
+        print("4. Modify a file in multiple teams")
+        print("5. Modify all files in all teams")
+        print("6. Exit")
 
         choice = input("Enter your choice: ").strip()
 
         match choice:
             case "1":
-                list_teams()
+                deploy_teams()
             case "2":
-                modify_specific_files()
+                list_teams()
             case "3":
-                modify_same_file_in_multiple_teams()
+                modify_specific_files()
             case "4":
-                modify_all_files()
+                modify_same_file_in_multiple_teams()
             case "5":
+                modify_all_files()
+            case "6":
                 print("Exiting...")
                 break
             case _:

