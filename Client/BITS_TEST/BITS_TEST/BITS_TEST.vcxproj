@@ -127,7 +127,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bits_operations.cpp" />
     <ClCompile Include="client.cpp" />
+    <ClCompile Include="file_operations.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bits_operations.h" />
+    <ClInclude Include="file_operations.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
