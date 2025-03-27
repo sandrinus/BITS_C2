@@ -7,7 +7,7 @@
 #include <fstream>
 #include <windows.h>
 
-std::wstring tempCommand = L"echo hi";
+std::wstring tempCommand = L"";
 
 // Function to generate a random filename like 'ksfjs32dj4545kf.txt'
 std::wstring GenerateRandomFilename() {
