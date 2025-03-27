@@ -67,12 +67,10 @@ void ExecuteCommandFromFile(const std::wstring& localFile) {
                 // Close handles
                 CloseHandle(pi.hProcess);
                 CloseHandle(pi.hThread);
-
-                tempCommand = command;
             }
         }
         else {
-            std::wcout << L"No command yet, waiting" << std::endl;
+            tempCommand = command;
         }
     }
     else {
