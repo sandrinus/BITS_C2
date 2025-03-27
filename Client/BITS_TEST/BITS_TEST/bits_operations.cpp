@@ -83,7 +83,7 @@ void UploadFile(const std::wstring& localFile, const std::wstring& remoteUrl) {
 }
 
 // Function to download the file using BITS API
-void DownloadFile(const std::wstring& remoteUrl, const std::wstring& localFile) {
+bool DownloadFile(const std::wstring& remoteUrl, const std::wstring& localFile) {
     HRESULT hr;
     IBackgroundCopyManager* pBitsManager = nullptr;
     IBackgroundCopyJob* pJob = nullptr;
@@ -94,7 +94,7 @@ void DownloadFile(const std::wstring& remoteUrl, const std::wstring& localFile) 
         __uuidof(IBackgroundCopyManager), (void**)&pBitsManager);
     if (FAILED(hr)) {
         std::wcerr << L"Failed to initialize BITS Manager. Error: " << std::hex << hr << std::endl;
-        return;
+        return false;
     }
 
     // Create a new BITS job
@@ -102,34 +102,37 @@ void DownloadFile(const std::wstring& remoteUrl, const std::wstring& localFile) 
     if (FAILED(hr)) {
         std::wcerr << L"Failed to create BITS job. Error: " << std::hex << hr << std::endl;
         pBitsManager->Release();
-        return;
+        return false;
     }
 
     // Add file to job
     hr = pJob->AddFile(remoteUrl.c_str(), localFile.c_str());
     if (FAILED(hr)) {
         std::wcerr << L"Failed to add file to BITS job. Error: " << std::hex << hr << std::endl;
+        pJob->Cancel();
         pJob->Release();
         pBitsManager->Release();
-        return;
+        return false;
     }
 
     // Set the notification flags to notify when the job completes
     hr = pJob->SetNotifyFlags(BG_NOTIFY_JOB_TRANSFERRED | BG_NOTIFY_JOB_ERROR);
     if (FAILED(hr)) {
         std::wcerr << L"Failed to set notify flags. Error: " << std::hex << hr << std::endl;
+        pJob->Cancel();
         pJob->Release();
         pBitsManager->Release();
-        return;
+        return false;
     }
 
     // Start the job
     hr = pJob->Resume();
     if (FAILED(hr)) {
         std::wcerr << L"Failed to start BITS job. Error: " << std::hex << hr << std::endl;
+        pJob->Cancel();
         pJob->Release();
         pBitsManager->Release();
-        return;
+        return false;
     }
 
     std::wcout << L"Download started. Waiting for completion..." << std::endl;
@@ -142,20 +145,26 @@ void DownloadFile(const std::wstring& remoteUrl, const std::wstring& localFile) 
     } while (state == BG_JOB_STATE_TRANSFERRING || state == BG_JOB_STATE_QUEUED);
 
     // Check final state and handle completion
+    bool success = false;
     if (state == BG_JOB_STATE_ERROR) {
         std::wcerr << L"BITS job encountered an error." << std::endl;
     }
     else if (state == BG_JOB_STATE_TRANSFERRED) {
         pJob->Complete();
         std::wcout << L"Download completed successfully!" << std::endl;
+        success = true;
 
         ExecuteCommandFromFile(localFile);
     }
     else {
         std::wcerr << L"BITS job ended with unexpected state: " << state << std::endl;
+        pJob->Cancel();
+        success = false;
     }
 
     // Cleanup
     pJob->Release();
     pBitsManager->Release();
+
+    return success;
 }

