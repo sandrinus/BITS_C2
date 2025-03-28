@@ -15,18 +15,16 @@ all:
 
     children:
       team01:
-        remotePath: "/team01"
         hosts:
           1.1.1.1: 
-            fileToDownload: "/dns.txt"
+            file_to_download: "/dns.txt"
           2.2.2.2:
-            fileToDownload: "/workstation.txt"
+            file_to_download: "/workstation.txt"
       team02:
-        remotePath: "/team02"
         hosts:
           1.1.1.1: 
-            fileToDownload: "/dns.txt"
+            file_to_download: "/dns.txt"
           2.2.2.2:
-            fileToDownload: "/workstation.txt"
+            file_to_download: "/workstation.txt"
             
       
