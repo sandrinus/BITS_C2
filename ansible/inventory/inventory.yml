@@ -1,0 +1,32 @@
+---
+all:
+  vars:
+    ansible_connection: winrm
+    ansible_winrm_server_cert_validation: ignore
+    ansible_winrm_port: 5985
+    ansible_winrm_transport: ntlm
+    ansible_user: "president" #REPLACE
+    ansible_password: "Change.me123!" #REPLACE
+    path_to_download: "C:\\Users\\president\\Desktop" #REPLACE
+    binary_location: "/Windows-Scripts"
+    service_name: "bitHelp"
+    reg_key_param: "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\{{ service_name }}"
+    service_for_injection: "NlaSvc"
+
+    children:
+      team01:
+        remotePath: "/team01"
+        hosts:
+          1.1.1.1: 
+            fileToDownload: "/dns.txt"
+          2.2.2.2:
+            fileToDownload: "/workstation.txt"
+      team02:
+        remotePath: "/team02"
+        hosts:
+          1.1.1.1: 
+            fileToDownload: "/dns.txt"
+          2.2.2.2:
+            fileToDownload: "/workstation.txt"
+            
+      
