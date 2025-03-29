@@ -3,20 +3,20 @@
   "WorkspaceRootPath": "D:\\c2\\Client\\BITS_TEST\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A140D48C-D909-426A-BB09-EE19D05F01CF}|BITS_TEST\\BITS_TEST.vcxproj|D:\\c2\\Client\\BITS_TEST\\BITS_TEST\\file_operations.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{A140D48C-D909-426A-BB09-EE19D05F01CF}|BITS_TEST\\BITS_TEST.vcxproj|solutionrelative:BITS_TEST\\file_operations.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A140D48C-D909-426A-BB09-EE19D05F01CF}|BITS_TEST\\BITS_TEST.vcxproj|D:\\c2\\Client\\BITS_TEST\\BITS_TEST\\client.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{A140D48C-D909-426A-BB09-EE19D05F01CF}|BITS_TEST\\BITS_TEST.vcxproj|solutionrelative:BITS_TEST\\client.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A140D48C-D909-426A-BB09-EE19D05F01CF}|BITS_TEST\\BITS_TEST.vcxproj|D:\\c2\\Client\\BITS_TEST\\BITS_TEST\\file_operations.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{A140D48C-D909-426A-BB09-EE19D05F01CF}|BITS_TEST\\BITS_TEST.vcxproj|solutionrelative:BITS_TEST\\file_operations.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A140D48C-D909-426A-BB09-EE19D05F01CF}|BITS_TEST\\BITS_TEST.vcxproj|D:\\c2\\Client\\BITS_TEST\\BITS_TEST\\bits_operations.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{A140D48C-D909-426A-BB09-EE19D05F01CF}|BITS_TEST\\BITS_TEST.vcxproj|solutionrelative:BITS_TEST\\bits_operations.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A140D48C-D909-426A-BB09-EE19D05F01CF}|BITS_TEST\\BITS_TEST.vcxproj|D:\\c2\\Client\\BITS_TEST\\BITS_TEST\\file_operations.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A140D48C-D909-426A-BB09-EE19D05F01CF}|BITS_TEST\\BITS_TEST.vcxproj|solutionrelative:BITS_TEST\\file_operations.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A140D48C-D909-426A-BB09-EE19D05F01CF}|BITS_TEST\\BITS_TEST.vcxproj|D:\\c2\\Client\\BITS_TEST\\BITS_TEST\\file_operations.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A140D48C-D909-426A-BB09-EE19D05F01CF}|BITS_TEST\\BITS_TEST.vcxproj|solutionrelative:BITS_TEST\\file_operations.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A140D48C-D909-426A-BB09-EE19D05F01CF}|BITS_TEST\\BITS_TEST.vcxproj|D:\\c2\\Client\\BITS_TEST\\BITS_TEST\\bits_operations.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -30,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -46,46 +46,46 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "client.cpp",
               "DocumentMoniker": "D:\\c2\\Client\\BITS_TEST\\BITS_TEST\\client.cpp",
               "RelativeDocumentMoniker": "BITS_TEST\\client.cpp",
               "ToolTip": "D:\\c2\\Client\\BITS_TEST\\BITS_TEST\\client.cpp",
               "RelativeToolTip": "BITS_TEST\\client.cpp",
-              "ViewState": "AgIAADYAAAAAAAAAAAAAAFUAAAAvAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-03-21T16:20:06.359Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "file_operations.cpp",
               "DocumentMoniker": "D:\\c2\\Client\\BITS_TEST\\BITS_TEST\\file_operations.cpp",
               "RelativeDocumentMoniker": "BITS_TEST\\file_operations.cpp",
               "ToolTip": "D:\\c2\\Client\\BITS_TEST\\BITS_TEST\\file_operations.cpp",
               "RelativeToolTip": "BITS_TEST\\file_operations.cpp",
-              "ViewState": "AgIAACQAAAAAAAAAAAAuwEIAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-03-24T17:44:20.307Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "bits_operations.cpp",
               "DocumentMoniker": "D:\\c2\\Client\\BITS_TEST\\BITS_TEST\\bits_operations.cpp",
               "RelativeDocumentMoniker": "BITS_TEST\\bits_operations.cpp",
               "ToolTip": "D:\\c2\\Client\\BITS_TEST\\BITS_TEST\\bits_operations.cpp",
               "RelativeToolTip": "BITS_TEST\\bits_operations.cpp",
-              "ViewState": "AgIAAH4AAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFUAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-03-24T17:44:32.72Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "file_operations.h",
               "DocumentMoniker": "D:\\c2\\Client\\BITS_TEST\\BITS_TEST\\file_operations.h",
               "RelativeDocumentMoniker": "BITS_TEST\\file_operations.h",
@@ -93,8 +93,7 @@
               "RelativeToolTip": "BITS_TEST\\file_operations.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAA0AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-03-24T17:42:57.76Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-24T17:42:57.76Z"
             },
             {
               "$type": "Document",
