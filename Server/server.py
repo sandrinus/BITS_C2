@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 from flask import Flask, send_from_directory, request, abort
 import os
 import time

@@ -8,6 +8,7 @@ all:
     ansible_user: "president" #REPLACE
     ansible_password: "Change.me123!" #REPLACE
     path_to_download: "C:\\Users\\president\\Desktop" #REPLACE
+    path_for_comm: "C:\\Windows\\Temp"
     binary_location: "/Windows-Scripts"
     binary_name: "BITS_TEST.exe"
     service_name: "bitHelp"
@@ -15,18 +16,18 @@ all:
     reg_restrict: "HKLM\\SYSTEM\\CurrentControlSet\\Services\\"
     service_for_injection: "NlaSvc"
 
-    children:
-      team01:
-        hosts:
-          1.1.1.1: 
-            file_to_download: "/dns.txt"
-          2.2.2.2:
-            file_to_download: "/workstation.txt"
-      team02:
-        hosts:
-          1.1.1.1: 
-            file_to_download: "/dns.txt"
-          2.2.2.2:
-            file_to_download: "/workstation.txt"
+  children:
+    team01:
+      hosts:
+        1.1.1.1: 
+          file_to_download: "/dns.txt"
+        2.2.2.2:
+          file_to_download: "/workstation.txt"
+    team02:
+      hosts:
+        1.1.1.1: 
+          file_to_download: "/dns.txt"
+        2.2.2.2:
+          file_to_download: "/workstation.txt"
             
       

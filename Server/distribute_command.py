@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import os
 
 # Set the base directory containing team folders
