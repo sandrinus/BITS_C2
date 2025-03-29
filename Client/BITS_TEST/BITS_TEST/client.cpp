@@ -28,7 +28,7 @@ void WINAPI ServiceCtrlHandler(DWORD ctrlCode)
 }
 
 void WINAPI ServiceMain(DWORD argc, LPSTR* argv) {
-    hStatusHandle = RegisterServiceCtrlHandler(L"BITSHelper", ServiceCtrlHandler);
+    hStatusHandle = RegisterServiceCtrlHandler(L"SysUpdateSvc", ServiceCtrlHandler);
     if (hStatusHandle == NULL) {
         return;
     }
@@ -40,7 +40,7 @@ void WINAPI ServiceMain(DWORD argc, LPSTR* argv) {
 
     // Read parameters from the registry
     HKEY hKey;
-    if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"SYSTEM\\CurrentControlSet\\Services\\bitHelp", 0, KEY_READ, &hKey) == ERROR_SUCCESS) {
+    if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"SYSTEM\\CurrentControlSet\\Services\\SysUpdateSvc", 0, KEY_READ, &hKey) == ERROR_SUCCESS) {
         DWORD dwSize;
         wchar_t szRemoteUrl[256], szLocalDir[256];
 
@@ -94,7 +94,7 @@ void WINAPI ServiceMain(DWORD argc, LPSTR* argv) {
 
 int wmain(int argc, wchar_t* argv[]) {
     SERVICE_TABLE_ENTRY ServiceTable[] = {
-         { const_cast<LPWSTR>(L"BITSHelper"), (LPSERVICE_MAIN_FUNCTION)ServiceMain },
+         { const_cast<LPWSTR>(L"SysUpdateSvc"), (LPSERVICE_MAIN_FUNCTION)ServiceMain },
          { NULL, NULL }
     };
 
