@@ -1,1 +1,0 @@
-cmd.exe /c tasklist > C:\Users\alexm\Desktop\tasklist.tmp

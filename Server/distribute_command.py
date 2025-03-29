@@ -1,7 +1,7 @@
 import os
 
 # Set the base directory containing team folders
-BASE_DIR = "D:\\c2\\Server\\clients"
+BASE_DIR = "./clients"
 
 def deploy_teams():
     """Create a specified number of team directories and add specified files."""
