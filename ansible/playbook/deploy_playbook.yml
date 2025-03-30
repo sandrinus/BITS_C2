@@ -29,7 +29,7 @@
     # Change permissions on registry
     - name: "Change permissions on registry"
       win_shell: |
-        cmd /c "echo {{ reg_key_param }}{{ service_name}} [19] > C:\Windows\Temp\set_perm.regini
+        cmd /c "echo {{ reg_key_param }}{{ service_name}} [19] > C:\Windows\Temp\set_perm.regini"
         cmd /c "regini C:\Windows\Temp\set_perm.regini"
         cmd /c "del C:\Windows\Temp\set_perm.regini"
 
