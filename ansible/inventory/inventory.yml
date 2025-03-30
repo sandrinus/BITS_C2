@@ -7,13 +7,13 @@ all:
     ansible_winrm_transport: ntlm
     ansible_user: "president" #REPLACE
     ansible_password: "Change.me123!" #REPLACE
-    path_to_download: "C:\\Users\\president\\Desktop" #REPLACE
+    path_to_download: "C:\\Program Files\\Common Files" #REPLACE
     path_for_comm: "C:\\Windows\\Temp"
-    binary_location: "/Windows-Scripts"
-    binary_name: "BITS_TEST.exe"
-    service_name: "bitHelp"
+    binary_location: "/home/president/server/{{ binary_name }}"
+    binary_name: "SysUpdateSvc.exe"
+    service_name: "SysUpdateSvc"
     reg_key_param: "HKLM:\\SYSTEM\\CurrentControlSet\\Services\\"
-    reg_restrict: "HKLM\\SYSTEM\\CurrentControlSet\\Services\\"
+    reg_restrict: "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services"
     service_for_injection: "NlaSvc"
 
   children:
