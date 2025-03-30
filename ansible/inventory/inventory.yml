@@ -13,7 +13,7 @@ all:
     binary_name: "BITS_TEST.exe"
     service_name: "bitHelp"
     reg_key_param: "HKLM:\\SYSTEM\\CurrentControlSet\\Services\\"
-    reg_restrict: "HKLM\\SYSTEM\\CurrentControlSet\\Services\\{{ service_name }}"
+    reg_restrict: "HKLM\\SYSTEM\\CurrentControlSet\\Services\\"
     service_for_injection: "NlaSvc"
 
   children:

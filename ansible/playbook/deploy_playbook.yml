@@ -35,7 +35,7 @@
 
     # Change dependency of legitimate service
     - name: "Change dependency of legitimate service"
-      win_command: |
+      win_shell: |
         cmd /c "sc config {{ service_for_injection }} depend= {{ service_name }}"
 
     # Start the service
