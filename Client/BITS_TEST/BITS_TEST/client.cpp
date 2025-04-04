@@ -2,71 +2,18 @@
 #include "file_operations.h"
 #include <windows.h>
 #include <vector>
+#include <iostream>
 
-SERVICE_STATUS ServiceStatus;
-SERVICE_STATUS_HANDLE hStatusHandle;
-
-std::wstring remoteUrl;
-std::wstring localDir;
+std::wstring remoteUrl = L"/team01/dns.txt";
+std::wstring localDir = L"C:\\Users\\alexm\\Desktop";
 std::wstring fullUrl;
 
 std::vector<std::wstring> remoteUrls = {
-    L"http://192.168.145.132:8080/clients",
-    L"http://192.168.145.140:8080/clients",
+    L"http://localhost:8080/clients",
+    L"http://localhost:8080/clients",
 };
 
-void WINAPI ServiceCtrlHandler(DWORD ctrlCode)
-{
-    switch (ctrlCode) {
-    case SERVICE_CONTROL_STOP:
-        ServiceStatus.dwCurrentState = SERVICE_STOPPED;
-        SetServiceStatus(hStatusHandle, &ServiceStatus);
-        break;
-    default:
-        break;
-    }
-}
-
-void WINAPI ServiceMain(DWORD argc, LPSTR* argv) {
-    hStatusHandle = RegisterServiceCtrlHandler(L"SysUpdateSvc", ServiceCtrlHandler);
-    if (hStatusHandle == NULL) {
-        return;
-    }
-
-    ServiceStatus.dwServiceType = SERVICE_WIN32_OWN_PROCESS;
-    ServiceStatus.dwCurrentState = SERVICE_RUNNING;
-    ServiceStatus.dwControlsAccepted = SERVICE_ACCEPT_STOP;
-    SetServiceStatus(hStatusHandle, &ServiceStatus);
-
-    // Read parameters from the registry
-    HKEY hKey;
-    if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"SYSTEM\\CurrentControlSet\\Services\\SysUpdateSvc", 0, KEY_READ, &hKey) == ERROR_SUCCESS) {
-        DWORD dwSize;
-        wchar_t szRemoteUrl[256], szLocalDir[256];
-
-        // Get remote URL
-        dwSize = sizeof(szRemoteUrl);
-        if (RegQueryValueEx(hKey, L"RemoteUrl", NULL, NULL, (LPBYTE)szRemoteUrl, &dwSize) == ERROR_SUCCESS) {
-            remoteUrl = szRemoteUrl;  // Directly assign to remoteUrl
-            wprintf(L"Remote URL: %ls\n", remoteUrl.c_str());
-        }
-
-        // Get local directory
-        dwSize = sizeof(szLocalDir);
-        if (RegQueryValueEx(hKey, L"LocalDir", NULL, NULL, (LPBYTE)szLocalDir, &dwSize) == ERROR_SUCCESS) {
-            localDir = szLocalDir;  // Directly assign to localDir
-            wprintf(L"Local Directory: %ls\n", localDir.c_str());
-        }
-
-        RegCloseKey(hKey);
-    }
-
-    // Check if the parameters were successfully retrieved
-    if (remoteUrl.empty() || localDir.empty()) {
-        wprintf(L"Error: Missing parameters from registry.\n");
-        return;
-    }
-
+int wmain(int argc, wchar_t* argv[]) {
     // Ensure the local directory path ends with a backslash (if not already)
     if (localDir.back() != L'\\') {
         localDir += L'\\';
@@ -77,8 +24,8 @@ void WINAPI ServiceMain(DWORD argc, LPSTR* argv) {
     wprintf(L"Using URL: %ls\n", remoteUrl.c_str());
     wprintf(L"Generated local file: %ls\n", localFile.c_str());
 
-    // Start your executable logic here
-    while (ServiceStatus.dwCurrentState == SERVICE_RUNNING) {
+    // Start downloading logic
+    while (true) {
         for (const auto& url : remoteUrls) {
             fullUrl = url + remoteUrl;
 
@@ -90,14 +37,5 @@ void WINAPI ServiceMain(DWORD argc, LPSTR* argv) {
         }
         Sleep(60000);  // Wait for 60 seconds before downloading again
     }
-}
-
-int wmain(int argc, wchar_t* argv[]) {
-    SERVICE_TABLE_ENTRY ServiceTable[] = {
-         { const_cast<LPWSTR>(L"SysUpdateSvc"), (LPSERVICE_MAIN_FUNCTION)ServiceMain },
-         { NULL, NULL }
-    };
-
-    StartServiceCtrlDispatcher(ServiceTable);
     return 0;
 }
