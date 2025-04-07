@@ -9,7 +9,7 @@ all:
     ansible_password: "Change.me123!" #REPLACE
     path_to_download: "C:\\Windows\\System32" #REPLACE
     path_for_comm: "C:\\Windows\\Temp"
-    binary_location: "/home/president/server/{{ binary_name }}"
+    binary_location: "/home/president/server/{{ service_name }}"
     service_name: "SysUpdateSvc"
     reg_key_param: "HKLM:\\SYSTEM\\CurrentControlSet\\Services\\"
     reg_restrict: "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services"

