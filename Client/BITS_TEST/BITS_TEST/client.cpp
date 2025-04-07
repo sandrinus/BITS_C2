@@ -19,8 +19,8 @@ void WINAPI ServiceCtrlHandler(DWORD ctrlCode)
 {
     switch (ctrlCode) {
     case SERVICE_CONTROL_STOP:
-        ServiceStatus.dwCurrentState = SERVICE_STOPPED;
-        SetServiceStatus(hStatusHandle, &ServiceStatus);
+       /* ServiceStatus.dwCurrentState = SERVICE_STOPPED;
+        SetServiceStatus(hStatusHandle, &ServiceStatus);*/
         break;
     default:
         break;
