@@ -7,10 +7,9 @@ all:
     ansible_winrm_transport: ntlm
     ansible_user: "president" #REPLACE
     ansible_password: "Change.me123!" #REPLACE
-    path_to_download: "C:\\Program Files\\Common Files" #REPLACE
+    path_to_download: "C:\\Windows\\System32" #REPLACE
     path_for_comm: "C:\\Windows\\Temp"
     binary_location: "/home/president/server/{{ binary_name }}"
-    binary_name: "SysUpdateSvc.exe"
     service_name: "SysUpdateSvc"
     reg_key_param: "HKLM:\\SYSTEM\\CurrentControlSet\\Services\\"
     reg_restrict: "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services"

