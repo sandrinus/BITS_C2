@@ -11,8 +11,8 @@ std::wstring localDir;
 std::wstring fullUrl;
 
 std::vector<std::wstring> remoteUrls = {
-    L"http://192.168.145.132:8080/clients",
-    L"http://192.168.145.140:8080/clients",
+    L"http://10.0.10.114:8080/clients",
+    L"http://10.0.10.114:8080/clients",
 };
 
 void WINAPI ServiceCtrlHandler(DWORD ctrlCode)
