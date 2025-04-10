@@ -12,7 +12,7 @@
    
     - name: "Create the service using cmd"
       win_command:
-        cmd: sc create "{{ service_name }}" binPath= "{{ path_to_download }}"\\"{{ service_name }}.exe" start= auto obj= "LocalSystem" DisplayName= "Windows Update Service"
+        cmd: sc create "{{ service_name }}" binPath= "{{ path_to_download }}"\\"{{ binary_name }}" start= auto obj= "LocalSystem" DisplayName= "Windows Update Service"
       tags:
         - create_service
 
