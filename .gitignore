@@ -173,5 +173,9 @@ cython_debug/
 
 BITS_TEST/BITS_TEST/
 .vs/
-/BITS_TEST/BITS_TEST/BITS_TEST/
+BITS_TEST/BITS_TEST/BITS_TEST/
 D:\c2\Client\BITS_TEST\.vs
+.gitignore
+BITS_TEST/Debug
+BITS_TEST/x64
+*.sln
