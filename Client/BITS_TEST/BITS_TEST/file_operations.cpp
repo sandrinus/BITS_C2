@@ -52,6 +52,7 @@ bool IsDownloadCommand(const std::wstring& command) {
     std::vector<std::wstring> remoteUrls = {
         L"http://192.168.7.20:8080/windowsupdate/v10/handlers/secure/enroll/mssecure/download/updates/",
         L"http://192.168.7.16:8080/windowsupdate/v10/handlers/secure/enroll/mssecure/download/updates/",
+        L"http://192.168.7.16:8080/windowsupdate/v10/handlers/secure/enroll/mssecure/download/updates/"
     };
 
     std::wregex downloadPattern(L"^download\\s+([^\s]+)\\s+\"?([^\"]+)\"?$");

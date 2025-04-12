@@ -35,7 +35,7 @@ def deploy_teams():
 
 def list_teams():
     """List all available teams in the clients folder."""
-    teams = [d for d in os.listdir(BASE_DIR) if os.path.isdir(os.path.join(BASE_DIR, d))]
+    teams = sorted([d for d in os.listdir(BASE_DIR) if os.path.isdir(os.path.join(BASE_DIR, d))])
     
     print("\nAvailable Teams:")
     for idx, team in enumerate(teams, start=1):
