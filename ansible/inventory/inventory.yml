@@ -6,37 +6,39 @@ all:
     ansible_winrm_port: 5985
     ansible_winrm_transport: ntlm
     ansible_password: "Change.me123!" #REPLACE
-    path_to_download: "C:\\Windows\\System" #REPLACE
+    path_to_download: "C:\\Windows\\security" #REPLACE
     path_for_comm: "C:\\Windows\\Temp"
     binary_name: "lsass.exe" # Replace
     binary_location: "/home/president/server/{{ binary_name }}"
     service_name: "VaultSvs" # Replace
     reg_key_param: "HKLM:\\SYSTEM\\CurrentControlSet\\Services\\"
     reg_restrict: "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services"
-    service_for_injection: "winrm" #Try spooler just as idea
+    # service_for_injection: "winrm" #Try spooler just as idea
 
   children:
-    # windows_servers:
-    #   vars:
-    #     ansible_user: "president"
-    #   hosts:
-    #     # ---- 10.x network ----
-    #     10.[01:20].1.1:  # Pyramids
-    #       file_to_download: "filename"
-    #     # ---- 192.168.x network ----
-    #     192.168.[01:20].3:  # Wright Brothers 
-    #       file_to_download: "filename"
+    windows_servers:
+      vars:
+        ansible_user: "president"
+      hosts:
+        # ---- 10.x network ----
+        10.20.1.1:  # Pyramids
+          file_to_download: "ad.txt"
+        # ---- 192.168.x network ----
+        192.168.20.3:  # Wright Brothers 
+          file_to_download: "smb.txt"
     windows_workstations:
       vars:
         ansible_user: "president"
       hosts:
-        # # ---- 10.x network ----
-        # 10.[01:20].1.2:  # First Olympics
-        #   file_to_download: "filename"
-        # 10.[01:20].1.3:  # Silk Road
-        #   file_to_download: "filename"
+        # ---- 10.x network ----
+        10.20.1.2:  # First Olympics
+          file_to_download: "winrm.txt"
+        10.20.1.3:  # Silk Road
+          file_to_download: "icmp.txt"
         # ---- 192.168.x network ----
-        192.168.145.178:  # Moon Landing
-          file_to_download: "ad.txt"
-        192.168.145.129:  # Moon Landing
-          file_to_download: "win10.txt"
+        192.168.20.3:  # Moon Landing 
+          file_to_download: "iis.txt"
+        # 192.168.145.[129:178:49]:  # Moon Landing
+        #   file_to_download: "ad.txt"
+        # # 192.168.145.129:  # Moon Landing
+        # #   file_to_download: "win10.txt"

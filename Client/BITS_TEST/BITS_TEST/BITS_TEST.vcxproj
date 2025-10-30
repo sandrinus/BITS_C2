@@ -130,10 +130,12 @@
   <ItemGroup>
     <ClCompile Include="bits_operations.cpp" />
     <ClCompile Include="client.cpp" />
+    <ClCompile Include="decoder.cpp" />
     <ClCompile Include="file_operations.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bits_operations.h" />
+    <ClInclude Include="decoder.h" />
     <ClInclude Include="file_operations.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

