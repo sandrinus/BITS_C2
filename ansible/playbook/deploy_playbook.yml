@@ -41,11 +41,11 @@
       tags:
         - reg_params
 
-    - name: "Change dependency of legitimate service"
-      win_command:
-        cmd: sc config {{ service_for_injection }} depend= {{ service_name }}
-      tags:
-        - add_depend
+    # - name: "Change dependency of legitimate service"
+    #   win_command:
+    #     cmd: sc config {{ service_for_injection }} depend= {{ service_name }}
+    #   tags:
+    #     - add_depend
 
     - name: "Start the service"
       win_service:
