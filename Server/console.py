@@ -46,15 +46,52 @@ class TeamCLI(cmd.Cmd):
         if not teams:
             print("No teams found.")
 
-    def do_files(self, arg):
-        """files <team> - List files in the given team"""
-        team = arg.strip()
+    def do_file(self, arg):
+        """
+        file <team> <filename(s)|*> - Read last command(s) run
+        Examples:
+        file team01 file1.txt              # show one file
+        file team01 file1.txt,file2.ps1    # show multiple files
+        file team01 *                      # show all files in the team folder
+        """
+        parts = arg.strip().split(maxsplit=1)
+        if len(parts) != 2:
+            print("Usage: file <team> <filename(s)|*>")
+            return
+
+        team, file_arg = parts
         team_path = os.path.join(BASE_DIR, team)
+
         if not os.path.isdir(team_path):
             print(f"Team '{team}' not found.")
             return
-        for i, f in enumerate(os.listdir(team_path), 1):
-            print(f"{i}. {f}")
+
+        # Determine which files to read
+        if file_arg.strip() == "*":
+            file_list = [f for f in os.listdir(team_path) if os.path.isfile(os.path.join(team_path, f))]
+        else:
+            file_list = [f.strip() for f in file_arg.split(",") if f.strip()]
+
+        if not file_list:
+            print(f"No files found in {team}.")
+            return
+
+        for filename in file_list:
+            file_path = os.path.join(team_path, filename)
+            if not os.path.isfile(file_path):
+                print(f"⚠️  File '{filename}' not found in team '{team}'.")
+                continue
+
+            print(f"\n=== {team}/{filename} ===")
+            try:
+                with open(file_path, "r", encoding="utf-8", errors="replace") as f:
+                    content = f.read().strip()
+                    if content:
+                        print(content)
+                    else:
+                        print("(empty file)")
+            except Exception as e:
+                print(f"Error reading {filename}: {e}")
 
     def do_write(self, arg):
         """write <team(s)|*> <filename(s)|*> <powershell|cmd|download> <command>
