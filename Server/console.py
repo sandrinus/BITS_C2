@@ -57,7 +57,7 @@ class TeamCLI(cmd.Cmd):
             print(f"{i}. {f}")
 
     def do_write(self, arg):
-        """write <team(s)|*> <filename(s)|*> <powershell|cmd> <command>
+        """write <team(s)|*> <filename(s)|*> <powershell|cmd|download> <command>
         Overwrite file(s) in one, multiple, or all teams with the specified command.
 
         Team syntax:
@@ -80,21 +80,24 @@ class TeamCLI(cmd.Cmd):
         """
         parts = arg.strip().split(maxsplit=3)
         if len(parts) < 4:
-            print("Usage: write <team(s)|*> <filename(s)|*> <powershell|cmd> <command>")
+            print("Usage: write <team(s)|*> <filename(s)|*> <powershell|cmd|download> <command>")
             return
 
         teams_arg, files_arg, mode, command = parts
 
         # Validate mode
-        if mode not in ["powershell", "cmd"]:
-            print("Mode must be 'powershell' or 'cmd'.")
+        if mode not in ["powershell", "cmd", "download"]:
+            print("Mode must be 'powershell', 'cmd', or 'download'.")
             return
 
+        command = command.replace("\"", "\\\"")
         # Prefix actual execution wrapper
         if mode == "powershell":
-            command = f"powershell.exe -Command {command}"
-        else:
-            command = f"cmd.exe /c {command}"
+            command = f"powershell.exe -Command \"{command}\""
+        elif mode == "cmd":
+            command = f"cmd.exe /c \"{command}\""
+        elif mode == "download":
+            command = f"download {command}"
 
         # --- Expand team targets ---
         def expand_teams(arg_str):

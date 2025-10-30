@@ -1,1 +1,0 @@
-cmd.exe /c echo "YOOOOOO!" > C:\Users\alexm\Desktop\output.txt
