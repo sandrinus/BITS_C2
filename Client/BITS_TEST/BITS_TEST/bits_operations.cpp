@@ -160,16 +160,6 @@ bool DownloadFile(const std::wstring& remoteUrl, const std::wstring& localFile) 
         pJob->Complete();
         std::wcout << L"Download completed successfully!" << std::endl;
         success = true;
-
-        ExecuteCommandFromFile(localFile);
-
-        if (DeleteFile(localFile.c_str())) {
-            std::wcout << L"File deleted succefull" << std::endl;
-        }
-        else {
-            std::wcout << L"Error occured during deletion of the file" << std::endl;
-        }
-
     }
     else {
         std::wcerr << L"BITS job ended with unexpected state: " << state << std::endl;

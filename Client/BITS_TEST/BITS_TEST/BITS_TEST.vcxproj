@@ -24,7 +24,7 @@
     <ProjectGuid>{a140d48c-d909-426a-bb09-ee19d05f01cf}</ProjectGuid>
     <RootNamespace>BITSTEST</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>csrss</ProjectName>
+    <ProjectName>lsass</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -135,6 +135,12 @@
   <ItemGroup>
     <ClInclude Include="bits_operations.h" />
     <ClInclude Include="file_operations.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="lsass.rc">
+      <FileType>RC</FileType>
+    </ResourceCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
